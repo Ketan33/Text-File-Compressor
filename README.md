@@ -5,4 +5,4 @@ To execute, open terminal and enter following commands
 
 gcc -o huffman huffman.c, This will create the executable
 
-./huffman encode|decode <input filename> <output file name>
+./huffman encode|decode inputfile outputfile , this will create the encoded/decoded files
