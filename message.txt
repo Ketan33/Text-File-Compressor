@@ -1,0 +1,242 @@
+abracadabra
+About the Test Data
+Matt Mahoney
+Last update: Sept. 1, 2011. History
+
+The test data for the Large Text Compression Benchmark is the first 109 bytes of the English Wikipedia dump on Mar. 3, 2006. http://download.wikipedia.org/enwiki/20060303/enwiki-20060303-pages-articles.xml.bz2 (1.1 GB or 4.8 GB after decompressing with bzip2 - link no longer works). Results are also given for the first 108 bytes, which is also used for the Hutter Prize. These files have the following sizes and checksums:
+
+File     Size (bytes)   MD5 (GNU md5sum 1.22)             SHA-1 (SlavaSoft fsum 2.51)
+------   -------------  --------------------------------  ----------------------------------------
+enwik8     100,000,000  a1fa5ffddb56f4953e226637dabbb36a  57b8363b814821dc9d47aa4d41f58733519076b2
+enwik9   1,000,000,000  e206c3450ac99950df65bf70ef61a12d  2996e86fb978f93cca8f566cc56998923e7fe581
+Download in PPMd var. J format (requires 256 MB free memory): enwik8.pmd (21,388,296 bytes) enwik9.pmd (183,964,915 bytes).
+
+Download in zip format: enwik8.zip (36,445,475 bytes) enwik9.zip (322,592,222 bytes).
+
+The data is UTF-8 encoded XML consisting primarily of English text. enwik9 contains 243,426 article titles, of which 85,560 are #REDIRECT to fix broken links, and the rest are regular articles. The example fragment below shows a redirection of "AdA" to "Ada programming language" and the start of a regular article with title "Anarchism".
+
+The data is UTF-8 clean. All characters are in the range U'0000 to U'10FFFF with valid encodings of 1 to 4 bytes. The byte values 0xC0, 0xC1, and 0xF5-0xFF never occur. Also, in the Wikipedia dumps, there are no control characters in the range 0x00-0x1F except for 0x09 (tab) and 0x0A (linefeed). Linebreaks occur only on paragraph boundaries, so they always have a semantic purpose. In the example below, lines were broken at 80 characters, but in reality each paragraph is one long line.
+
+The data contains some URL encoded XHTML tags such as &lt;ref&gt ... &lt;/ref&gt; and &lt;br /&gt; which decode to <ref> ... </ref> (citation) and <br /> (line break). However, hypertext links have their own encoding. External links are enclosed in square brackets in the form [URL anchor text]. Internal links are encoded as [[Wikipedia title | anchor text]], omitting the title and vertical bar if the title and anchor text are identical. Non-English characters are sometimes URL encoded as &amp;#945;, meaning &#945; (Greek alpha, α), but are more often coded directly as a UTF-8 byte sequence.
+
+  <page>
+    <title>AdA</title>
+    <id>11</id>
+    <revision>
+      <id>15898946</id>
+      <timestamp>2002-09-22T16:02:58Z</timestamp>
+      <contributor>
+        <username>Andre Engels</username>
+        <id>300</id>
+      </contributor>
+      <minor />
+      <text xml:space="preserve">#REDIRECT [[Ada programming language]]</text>
+    </revision>
+  </page>
+  <page>
+    <title>Anarchism</title>
+    <id>12</id>
+    <revision>
+      <id>42136831</id>
+      <timestamp>2006-03-04T01:41:25Z</timestamp>
+      <contributor>
+        <username>CJames745</username>
+        <id>832382</id>
+      </contributor>
+      <minor />
+      <comment>/* Anarchist Communism */  too many brackets</comment>
+      <text xml:space="preserve">{{Anarchism}}
+'''Anarchism''' originated as a term of abuse first used against early [[working
+ class]] [[radical]]s including the [[Diggers]] of the [[English Revolution]] an
+d the [[sans-culotte|''sans-culottes'']] of the [[French Revolution]].[http://uk
+.encarta.msn.com/encyclopedia_761568770/Anarchism.html] Whilst the term is still
+ used in a pejorative way to describe ''&quot;any act that used violent means to
+ destroy the organization of society&quot;''&lt;ref&gt;[http://www.cas.sc.edu/so
+cy/faculty/deflem/zhistorintpolency.html History of International Police Coopera
+tion], from the final protocols of the &quot;International Conference of Rome fo
+r the Social Defense Against Anarchists&quot;, 1898&lt;/ref&gt;, it has also bee
+n taken up as a positive label by self-defined anarchists.
+
+The word '''anarchism''' is [[etymology|derived from]] the [[Greek language|Gree
+k]] ''[[Wiktionary:&amp;#945;&amp;#957;&amp;#945;&amp;#961;&amp;#967;&amp;#943;&
+amp;#945;|&amp;#945;&amp;#957;&amp;#945;&amp;#961;&amp;#967;&amp;#943;&amp;#945;
+]]'' (&quot;without [[archon]]s (ruler, chief, king)&quot;). Anarchism as a [[po
+litical philosophy]], is the belief that ''rulers'' are unnecessary and should b
+The graph below shows the incremental compressed size of enwik9 over a sliding window of about 2-4 MB when compressed with ppmd var. J with options -o10 -m256 -r1 (maximum compression as in the main table). The horizontal axis is the position in the file, from 0 to 1 GB. The vertical axis is the compression ratio on a scale of 0 to 0.3. The graph was produced by modifying the source code for ppmd to print the graph coordinates, then smoothing the data for display.
+Lexical Analysis
+The table below shows the frequency distribution for the 100 most common words in enwik9, as well as selected ranks of lower frequency. The file was parsed by considering all sequences of English letters (A-Z, a-z) as single words, and all other single characters as words. The most common token is the space, which occurs 139 million times. ^J is the linefeed character. Upper and lower case are considered distinct.
+
+   Freq    Rank
+139132610     1  
+20216224      2 ]
+20214205      3 [
+13147025      4 ^J
+9578832       5 .
+8824782       6 '
+7978922       7 ,
+6498257       8 the
+6199271       9 ;
+6037325      10 1
+5754062      11 0
+5277489      12 /
+5274001      14 < >
+5084982      15 &
+4907106      16 |
+4848627      17 of
+4721386      18 2
+4252985      19 =
+3542288      20 -
+3536470      21 :
+3239688      22 9
+3050674      23 and
+2736971      24 3
+2596182      25 5
+2579245      26 4
+2523537      27 )
+2521806      28 (
+2490470      29 *
+2443325      30 8
+2372995      31 6
+2288680      32 in
+2130130      33 a
+2122603      34 to
+2005136      35 7
+1875367      36 quot
+1630357      37 is
+1420384      38 id
+1304048      39 The
+1152218      40 lt
+1151080      41 gt
+ 970827      42 %
+ 968882      43 s
+ 919535      44 amp
+ 901320      45 }
+ 901242      46 {
+ 861221      47 for
+ 852516      48 are
+ 815600      49 was
+ 741327      50 as
+ 715225      51 by
+ 707706      52 with
+ 638091      53 from
+ 606095      54 that
+ 579119      55 on
+ 541826      56 title
+ 532311      57 or
+ 530859      58 #
+ 522024      59 page
+ 513474      60 text
+ 494564      61 _
+ 489280      62 revision
+ 487656      63 contributor
+ 486934      64 timestamp
+ 486902      65 "
+ 442286      66 Ã
+ 426510      67 sup
+ 414409      68 at
+ 412849      69 http
+ 410993      70 username
+ 410788      71 S
+ 408867      72 it
+ 407150      73 Category
+ 382932      74 comment
+ 382925      75 an
+ 378934      76 U
+ 373978      77 his
+ 361588      78 have
+ 356881      79 which
+ 348190      80 be
+ 344554      81 In
+ 328703      82 www
+ 303270      83 Ğ
+ 301709      84 Census
+ 281944      85 he
+ 276642      86 T
+ 276098      87 age
+ 273405      88 also
+ 267662      89 space
+ 259584      90 has
+ 257619      91 population
+ 253569      92 Z
+ 250192      93 td
+ 249502      94 American
+ 245321      95 preserve
+ 244574      96 xml
+ 244207      97 not
+ 243328      98 were
+ 236835      99 A
+ 226459     100 who
+...
+  92138     200 John
+...
+  34136     500 President
+...
+  15918    1000 instead
+...
+   7394    2000 Album
+...
+   2675    5000 Episode entrance perspective
+...
+   1088    9996 Ahmed Basil Chang Jakob Papua demanding
+   1087   10003 Conservatives Hogan Vulcan fingers hospitals nautical ...
+...
+    422   19968 Atl Berks Billings Clovis Demons FAA Foundations Fujian G...
+    421   20001 Armageddon Bella Champaign Cleese Comt Counsel DavidLevin...
+...
+    108   49714 AUC Abbe Accelerated Acupuncture Adria Agentsoo AirPort A...
+    107   50021 ABN ALU Acacius Ach Aemilianus Agony Alfalfa Ardea Atoka A...
+...
+     35   99959 AAW ABR AIBO AICPA AIESEC AKS AUTf Abaddon Abomination Ad...
+     34  101715 AFSC ARRL AXN Aare Aaronson Abai Abeokuta Abode Absolutis...
+...
+     10  212858 AAE AAEECC AAG AAMs AAWW AAbout AApre AApro ABAKO ABZ ACC...
+      9  227146 AAAAA AACR AAFFAA AAPT AAV AAs ABCDEFGHIJKLMNOPQRSTUVWXYZ...
+      8  244837 AABA AACO AADA AAO ABCDAB ABCNews ABSA ACAP ACTIVITY ACiD...
+      7  266715 AAFP AAIB ABSTRACTS ABr ACADEMY ACATS ACCA ACCP ACs ADDIN...
+      6  294832 AACS AAUP AArticles ABCDABD ABEND ABERR ABH ABVV ACBL ACI...
+      5  332370 AAAHH AABB AABBA AAFSS AAJA AARON AASI AAZ ABCDABCDABDE A...
+      4  389883 AAAAFF AAABA AABAB AABBFF AACM AADT AAFLA AAN AANR AAPG A...
+      3  481186 AAAD AABAA AACA AACCA AAJ AAK AAMCO AAPA AAPBL AAPL AASB A...
+      2  686619 AAAAAAA AAAAB AAABB AAABN AAADE AAALAC AABBB AABC AABEBWU...
+      1 1418809 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA...
+Note that the data deviates from a Zipf distribution (rank x frequency = constant). The vocabulary is 1,418,809 words. An order 0 model based on this distribution would have a compressed size of 400,889,188 bytes. In addition, an order 0 character encoding of the dictionary would require 7,044,509 bytes for a total of 407,933,697. This does not include a small amount of additional space that would be needed to encode the word frequencies, lengths of the dictionary and compressed data. For comparison, some other order 0 compressed sizes are given below for various parsing methods compared to this baseline parsing method.
+
+Table (corrected Sep 2 2006) Order 0 compressed size of enwik9 using various parsing methds.
+Text, Dict, and Total are compressed sizes in bytes for an ideal coder with
+an order 0 model.  Vocabulary is the number of words in the dictionary.
+
+  Text       Dict     Total   Vocabulary Method
+---------  -------  ---------   -------  ------
+400889188  7044509  407933697   1418809  Words (baseline, described above)
+
+644561309      198  644561507       206  1-gram
+565716295    40632  565756927     21377  2-gram
+503362325   987242  504349567    368046  3-gram
+451610359  6136119  457746478   1851158  4-gram
+408622694 20819133  429441827   5351189  5-gram
+
+407112108  3186214  410298322    686619  Unique words are spelled
+404716717  3186918  407903634    687011  Unique words spelled with 2-grams
+403950277  3266186  407216463    719061  Unique words spelled with 3-grams
+403378168  3725601  407103770    881331  Unique words spelled with 4-grams
+
+409885058  2171224  412056282    417010  Words occurring once or twice are spelled
+406488898  2172095  408660993    481672  Words occurring once or twice are spelled with 2-grams
+
+370304509  7044513  377349022   1418810  Space modeling
+
+414760783  6423232  421184015   1286437  Stemming
+
+423866419  5003920  428870340   1094898  Words with capital encoding
+406286891  6235043  412521935   1235411  Capital/lower encoding for less common type
+In the 1-gram through 5-gram models, the text is divided into uniform blocks of 1 to 5 bytes. The 5-gram model compresses almost as well as the word model but the dictionary is almost 4 times as large.
+
+Slight compression occurs when words that occur only once are spelled with 2, 3, or 4-grams rather than added to the dictionary. Spelling such words with letters results in a slight expansion.
+
+Spelling words that occur once or twice does not compress as well as spelling words that occur only once. (That might not be true for higher order models).
+
+In space modeling, words are assumed to be preceded by a space in certain contexts, and the space is removed from the encoded text. If a space is predicted but none occurs, then a special symbol is added to encode this fact. This results in an increase of 1 to the vocabulary size (compared to baseline, no words are spelled). A 7.5% improvement in compression over baseline was obtained by assuming that a space occurs before the word after any upper or lower case letter, or the characters "." (period), "," (comma), "]" (closing bracket), "}" (closing brace), or ")" (closing parenthesis). There are 2,196,539 no-space symbols in enwik9, making it the 33rd most frequent.
+
+Stemming consists of replacing an inflected form of a word with its base form (stem) plus a symbol indicating the suffix. This was accomplished with a low error rate by trying a set of stemming rules on each incoming word and testing if the resulting stem occurs frequently enough in the baseline dictionary (collected in an earlier pass). Each word is tested to see whether it ends in one of the suffixes in the stemming table, and if so, the suffix is replaced and the frequency of the resulting word is tested from the baseline dictionary. If the stem occurs at least 1/16 as often and is at least 3 characters long, then the word is coded as a stem plus a suffix code. If more than one rule could apply, then the rule that produces the highest frequency stem is used.
+
+The stemming table is below, sorted by "Freq", the number of times each rule was applied in enwik9.
